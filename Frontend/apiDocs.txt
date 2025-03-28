@@ -1,5 +1,7 @@
 /api/sensor-data
 
+Raw response: {"soilMoisture":305,"temperature":25.3,"humidity":42,"timestamp":"2025-03-28T16:30:39.745Z"}
+
 Updated sensor data: {
   soilMoisture: 304,
   temperature: 25.3,
