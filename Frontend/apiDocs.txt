@@ -1,0 +1,8 @@
+/api/sensor-data
+
+Updated sensor data: {
+  soilMoisture: 304,
+  temperature: 25.3,
+  humidity: 42,
+  timestamp: '2025-03-28T16:31:39.847Z'
+}
