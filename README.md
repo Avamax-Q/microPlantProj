@@ -1,10 +1,10 @@
-Automated Greenhouse using Arduino
+# Automated Greenhouse using Arduino
 
-Overview
+## Overview
 
 This project automates a greenhouse environment using an Arduino-based system. It monitors and controls temperature, humidity, soil moisture, and light levels to optimize plant growth.
 
-Features
+## Features
 
 Temperature & Humidity Control: Uses a DHT11/DHT22 sensor to monitor and regulate temperature and humidity.
 
@@ -16,7 +16,7 @@ Ventilation System: Fans operate when temperature exceeds predefined limits.
 
 LCD Display & Alerts: Displays real-time sensor data and triggers alerts if conditions are critical.
 
-Components Required
+## Components Required
 
 Arduino Uno/Nano
 
@@ -38,7 +38,7 @@ LEDs (For status indications)
 
 Power Supply (5V & 12V as needed)
 
-Future Enhancements
+## Future Enhancements
 
 Add IoT integration for remote monitoring.
 
