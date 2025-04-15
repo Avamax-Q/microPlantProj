@@ -1,7 +1,8 @@
 'use client';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ChartPieIcon, SunIcon, CloudIcon } from '@heroicons/react/24/outline';
-import React, { useState, useEffect } from 'react';
+import { ChartPieIcon, SunIcon, CloudIcon, LightBulbIcon } from '@heroicons/react/24/outline';
+import React from 'react';
+import useSensorData from '../hooks/useSensorData'; // Adjust the import path as needed
 
 // Modified DataCard to accept a custom borderClass
 const DataCard = ({ icon, title, value, unit, borderClass = "" }) => {
@@ -19,63 +20,17 @@ const DataCard = ({ icon, title, value, unit, borderClass = "" }) => {
 };
 
 const SensorDashboard = () => {
-  const [history, setHistory] = useState([
-    { timestamp: Date.now() - 5000000, temperature: 24, humidity: 85, soilMoisture: 22 },
-    { timestamp: Date.now() - 4000000, temperature: 25, humidity: 87, soilMoisture: 23 },
-    { timestamp: Date.now() - 3000000, temperature: 26, humidity: 90, soilMoisture: 24 },
-    { timestamp: Date.now() - 2000000, temperature: 27, humidity: 95, soilMoisture: 25 },
-    { timestamp: Date.now() - 1000000, temperature: 25, humidity: 97, soilMoisture: 26 },
-    { timestamp: Date.now(), temperature: 25, humidity: 100, soilMoisture: 25 }
-  ]);
+  const { data, history, error, soilMoisturePercentage } = useSensorData(5000);
 
-  const [data, setData] = useState({soilMoisture:"", temperature:"", humidity:""});
-  const [error, setError] = useState(null);
-  
-  // Convert soil moisture reading to percentage
-  const getSoilMoisturePercentage = (reading) => {
-    if (reading === "" || reading === null || reading === undefined) return "";
-    // Convert from raw value (0-1023) to percentage (100%-0%)
-    const percentage = Math.round(100 - (reading / 1023 * 100));
-    return isNaN(percentage) ? "" : percentage;
-  };
-  
-  const fetchData = async () => {
-    try {
-      const response = await fetch('http://localhost:3002/api/sensor-data');
-      const newData = await response.json();
-      
-      setData(newData);
-      
-      // Add soil moisture percentage to history
-      const newDataWithPercentage = {
-        ...newData,
-        soilMoisturePercentage: getSoilMoisturePercentage(newData.soilMoisture)
-      };
-      
-      setHistory(prev => [...prev.slice(-9), newDataWithPercentage]); // Keep last 10 entries
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch sensor data');
-    }
-  };
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (error) return <div>{error}</div>;
-
-  // Get soil moisture percentage for display
-  const soilMoisturePercentage = getSoilMoisturePercentage(data.soilMoisture);
   const moistureBorderClass = soilMoisturePercentage < 50 ? 'border-2 border-red-500' : 'border-2 border-green-500';
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Plant Monitoring System</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <DataCard 
           icon={<ChartPieIcon className="h-6 w-6" />}
           title="Soil Moisture"
@@ -94,6 +49,12 @@ const SensorDashboard = () => {
           title="Humidity"
           value={data.humidity}
           unit="%"
+        />
+        <DataCard
+          icon={<LightBulbIcon className="h-6 w-6" />}
+          title="Light Level"
+          value={data.light}
+          unit="lux"
         />
       </div>
 
@@ -128,6 +89,12 @@ const SensorDashboard = () => {
                 dataKey="soilMoisturePercentage"
                 stroke="#8884d8"
                 name="Soil Moisture (%)"
+              />
+              <Line
+                type="monotone"
+                dataKey="light"
+                stroke="#ffc658"
+                name="Light (lux)"
               />
             </LineChart>
           </ResponsiveContainer>
