@@ -41,7 +41,7 @@ const SensorDashboard = () => {
         <DataCard
           icon={<SunIcon className="h-6 w-6" />}
           title="Temperature"
-          value={data.temperature}
+          value={data.ambientTemperature}
           unit="°C"
         />
         <DataCard
@@ -53,7 +53,7 @@ const SensorDashboard = () => {
         <DataCard
           icon={<LightBulbIcon className="h-6 w-6" />}
           title="Light Level"
-          value={data.light}
+          value={data.lightIntensity}
           unit="lux"
         />
       </div>
