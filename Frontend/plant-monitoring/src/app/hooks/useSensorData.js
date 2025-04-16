@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-const useSensorData = (refreshInterval = 5000) => {
-  const [data, setData] = useState({ soilMoisture: '', temperature: '', humidity: '', light: '' });
+const useSensorData = (refreshInterval = 15000) => {
+  const [data, setData] = useState({ soilMoisture: '', ambientTemperature: '', humidity: '', lightIntensity: '' });
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
 
@@ -9,17 +9,17 @@ const useSensorData = (refreshInterval = 5000) => {
   const getSoilMoisturePercentage = (reading) => {
     if (reading === "" || reading === null || reading === undefined) return "";
     // Convert from raw value (0-1023) to percentage (100%-0%)
-    const percentage = Math.round(100 - (reading / 1023 * 100));
+    const percentage = Math.round(reading-15,2);
     return isNaN(percentage) ? "" : percentage;
   };
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/sensor-data');
+      const response = await fetch('http://10.191.62.125:3001/api/sensor-data');
       const newData = await response.json();
       
       setData(newData);
-      
+      console.log(newData);
       // Add soil moisture percentage to history
       const newDataWithPercentage = {
         ...newData,
